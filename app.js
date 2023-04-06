@@ -223,3 +223,23 @@ app.put(
     response.send("District Details Updated ");
   }
 );
+
+//API_8 accessing stats
+
+app.get(
+  "/states/:stateId/stats",
+  validatingToken,
+  async (request, response) => {
+    const { stateId } = request.params;
+    const dbQuery = `
+                SELECT 
+                    SUM(cases) AS totalCases,
+                    SUM(cured) AS totalCured,
+                    SUM(active) AS totalActive,
+                    SUM(deaths) AS totalDeaths
+                FROM district
+                WHERE state_id = ${stateId};`;
+    const districtStats = await db.get(dbQuery);
+    response.send(districtStats);
+  }
+);
