@@ -63,7 +63,7 @@ app.post("/login/", async (request, response) => {
   const isUserPresent = await db.get(dbQuery);
   if (isUserPresent === undefined) {
     response.status(400);
-    response.send("Invalid User");
+    response.send("Invalid user");
   } else {
     const verifyPassword = await bcrypt.compare(
       password,
@@ -72,11 +72,11 @@ app.post("/login/", async (request, response) => {
     console.log(verifyPassword);
     if (verifyPassword === false) {
       response.status(400);
-      response.send("Invalid Password");
+      response.send("Invalid password");
     } else {
       const payload = username;
-      const token = jwt.sign(payload, "abcdefg");
-      response.send({ token });
+      const jwtToken = jwt.sign(payload, "abcdefg");
+      response.send({ jwtToken });
     }
   }
 });
@@ -89,12 +89,12 @@ const validatingToken = (request, response, next) => {
   }
   if (jwtToken === undefined) {
     response.status(401);
-    response.send("Invalid Token");
+    response.send("Invalid JWT Token");
   } else {
     jwt.verify(jwtToken, "abcdefg", async (error, payload) => {
       if (error) {
         response.status(401);
-        response.send("Invalid Token");
+        response.send("Invalid JWT Token");
       } else {
         request.username = payload.username;
         next();
@@ -152,7 +152,7 @@ app.post("/districts/", validatingToken, async (request, response) => {
                 `;
   const inserted = await db.run(dbQuery);
   //const reqState = convertStateTable(stateArray);
-  response.send("District successfully added");
+  response.send("District Successfully Added");
 });
 
 //API_5 accessing database
@@ -220,7 +220,7 @@ app.put(
                 `;
     const updated = await db.run(dbQuery);
     //const reqState = convertStateTable(stateArray);
-    response.send("District Details Updated ");
+    response.send("District Details Updated");
   }
 );
 
